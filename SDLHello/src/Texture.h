@@ -5,10 +5,9 @@
 #include <SDL_render.h>
 
 struct LabeledRect {
-    uint8_t SrcID;
-    SDL_Rect Rect;
+    uint8_t SrcID = 0;
+    SDL_Rect Rect = { 0, 0, 0, 0 };
 
-    LabeledRect() : SrcID(0), Rect{ 0, 0, 0, 0 } {}
     LabeledRect(uint8_t id, const SDL_Rect& rect) : SrcID(id), Rect(rect) {}
     LabeledRect(uint8_t id, int x, int y, int w, int h) : SrcID(id), Rect{ x, y, w, h } {}
 };

@@ -5,15 +5,13 @@
 #include <SDL_render.h>
 #include <SDL_pixels.h>
 
-#include "Window.h"
 #include "Texture.h"
 
 class Renderer {
 public:
-    Renderer(Window& DisplayedWindow);
+    Renderer(SDL_Renderer* data);
     ~Renderer();
 
-    void init(Window& DisplayedWindow);
     void destroy();
 
     inline SDL_Renderer* data() {

@@ -1,7 +1,8 @@
 #include "Window.h"
 
-#include <SDL_video.h>
+#include <SDL_events.h>
 #include <SDL_surface.h>
+#include <SDL_video.h>
 
 #include "SDLErrorHandler.h"
 
@@ -10,26 +11,26 @@ const int Window::DEFAULT_WIDTH = 640;
 const int Window::DEFAULT_HEIGHT = 640;
 
 Window::Window()
-    : m_Data(nullptr), m_Surface(nullptr),
+    : m_Data(nullptr), m_Surface(nullptr), m_Renderer(nullptr),
     m_Title(DEFAULT_TITLE), m_Width(DEFAULT_WIDTH), m_Height(DEFAULT_HEIGHT) {
-    init();
+    init(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 }
 
-Window::Window(const char* title, int w, int h)
+Window::Window(const char* title, int w, int h, uint32_t flags)
     : m_Data(nullptr), m_Surface(nullptr), m_Title(title), m_Width(w), m_Height(h) {
-    init();
+    init(flags);
 }
 
 Window::~Window() {
     destroy();
 }
 
-void Window::init() {
+void Window::init(uint32_t flags) {
     m_Data = SDL_CreateWindow(
         m_Title,
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         m_Width, m_Height,
-        SDL_WINDOW_SHOWN
+        flags
     );
     SDLAssert(m_Data != nullptr);
     
@@ -39,4 +40,28 @@ void Window::init() {
 
 void Window::destroy() {
     SDL_DestroyWindow(m_Data);
+}
+
+Renderer Window::createRenderer(uint32_t flags) {
+    SDL_Renderer* RendererData = SDL_CreateRenderer(m_Data, -1, flags);
+    SDLAssert(RendererData != nullptr);
+    return Renderer(RendererData);
+}
+
+void Window::bindRenderer(Renderer& RenderingContext) {
+    m_Renderer = &RenderingContext;
+}
+
+void Window::handleEvent(const SDL_WindowEvent& Event) {
+    switch (Event.event) {
+    case SDL_WINDOWEVENT_EXPOSED: {
+        
+        break;
+    }
+    case SDL_WINDOWEVENT_RESIZED: {
+        m_Width  = Event.data1;
+        m_Height = Event.data2;
+        break;
+    }
+    }
 }

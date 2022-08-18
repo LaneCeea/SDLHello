@@ -163,6 +163,7 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\SDLErrorHandler.cpp" />
     <ClCompile Include="src\SDLHandler.cpp" />
+    <ClCompile Include="src\Mouse.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\vendor\ImGui\imgui.cpp" />
     <ClCompile Include="src\vendor\ImGui\imgui_demo.cpp" />
@@ -174,6 +175,7 @@
     <ClCompile Include="src\Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Mouse.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\Renderer.h" />
     <ClInclude Include="src\SDLHandler.h" />
@@ -186,6 +188,8 @@
     <ClInclude Include="src\vendor\ImGui\imstb_rectpack.h" />
     <ClInclude Include="src\vendor\ImGui\imstb_textedit.h" />
     <ClInclude Include="src\vendor\ImGui\imstb_truetype.h" />
+    <ClInclude Include="src\vendor\Rng\Rng.h" />
+    <ClInclude Include="src\vendor\Rng\RngEngine.h" />
     <ClInclude Include="src\Window.h" />
   </ItemGroup>
   <ItemGroup>

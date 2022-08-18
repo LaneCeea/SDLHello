@@ -1,28 +1,18 @@
 #include "Renderer.h"
 
-#include <cstdio>
 #include <SDL_render.h>
 #include <SDL_pixels.h>
 #include <SDL_image.h>
 
-#include "Window.h"
 #include "SDLErrorHandler.h"
 
-Renderer::Renderer(Window& DisplayedWindow)
-    : m_Data(nullptr) {
-    init(DisplayedWindow);
+Renderer::Renderer(SDL_Renderer* data)
+    : m_Data(data) {
     setColor({ 0xFF, 0xFF, 0xFF, 0xFF });
 }
 
 Renderer::~Renderer() {
     destroy();
-}
-
-void Renderer::init(Window& DisplayedWindow) {
-    m_Data = SDL_CreateRenderer(
-        DisplayedWindow.data(), -1, SDL_RENDERER_ACCELERATED
-    );
-    SDLAssert(m_Data != nullptr);
 }
 
 void Renderer::destroy() {
@@ -73,7 +63,6 @@ void Renderer::render(Texture& SourceTexture, const std::vector<LabeledRect>& Sr
 void Renderer::render(Texture& SourceTexture) {
     render(SourceTexture, SourceTexture.getSrc(), SourceTexture.getDst());
 }
-
 
 void Renderer::present() {
     SDL_RenderPresent(m_Data);

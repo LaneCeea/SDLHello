@@ -1,17 +1,30 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
-#include <SDL_video.h>
+#include <SDL_events.h>
 #include <SDL_surface.h>
+#include <SDL_video.h>
+
+#include "Renderer.h"
 
 class Window {
 public:
     Window();
-    Window(const char* title, int w, int h);
+    Window(const char* title, int w, int h, uint32_t flags);
     ~Window();
 
-    void init();
+    void init(uint32_t flags);
     void destroy();
+
+    Renderer createRenderer(uint32_t flags);
+    void bindRenderer(Renderer& RenderingContext);
+
+    void handleEvent(const SDL_WindowEvent& Event);
+
+
+    ///////////////////////////
+    // Getter
+    ///////////////////////////
 
     inline SDL_Window* data() {
         return m_Data;
@@ -29,6 +42,7 @@ public:
         return m_Height;
     }
 
+
 public:
     static const char* DEFAULT_TITLE;
     static const int DEFAULT_WIDTH;
@@ -37,6 +51,7 @@ public:
 private:
     SDL_Window* m_Data;
     SDL_Surface* m_Surface;
+    Renderer* m_Renderer;
     const char* m_Title;
     int m_Width;
     int m_Height;
