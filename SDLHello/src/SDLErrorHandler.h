@@ -8,6 +8,7 @@
 #ifdef NDEBUG
 #define SDLAssert(x) (void)(x)
 #define IMGAssert(x) (void)(x)
+#define DEBUGLOG(x)  (void)(x)
 
 #else // ^^^ NDEBUG ^^^ // vvv !NDEBUG vvv
 #define SDLAssert(x) if(!(x)) {                                                         \
@@ -19,6 +20,8 @@
     std::printf("[SDL_image Error] (%s): %s %s:%d\n", SDL_GetError(), #x, __FILE__, __LINE__);  \
     std::abort();                                                                               \
 }
+
+#define DEBUGLOG(x) std::printf(x)
 
 #endif // NDEBUG
 

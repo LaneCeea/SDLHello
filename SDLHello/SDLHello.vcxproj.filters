@@ -57,6 +57,12 @@
     <ClCompile Include="src\Mouse.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\Minesweeper\Gameboard.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Minesweeper\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\SDLErrorHandler.h">
@@ -107,19 +113,25 @@
     <ClInclude Include="src\vendor\Rng\RngEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="res\textures\TileA.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\TileB.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="res\textures\Tile.png">
-      <Filter>Resource Files</Filter>
-    </Image>
+    <ClInclude Include="src\Minesweeper\GameBoard.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minesweeper\Game.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Minesweeper\Vec2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="imgui.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\textures\TileSetA.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="res\textures\TileSetB.png">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>

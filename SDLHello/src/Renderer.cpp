@@ -8,7 +8,7 @@
 
 Renderer::Renderer(SDL_Renderer* data)
     : m_Data(data) {
-    setColor({ 0xFF, 0xFF, 0xFF, 0xFF });
+    setColor({ 0x00, 0x00, 0x00, 0xFF });
 }
 
 Renderer::~Renderer() {

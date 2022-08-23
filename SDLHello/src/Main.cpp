@@ -17,39 +17,7 @@
 #include "Texture.h"
 #include "Mouse.h"
 
-class Cell {
-public:
-    Cell() : m_SrcID(4) {
-        auto& Rand = lan::RandomInt32<int>::getInstance();
-        m_HitBox = { Rand.getNum(0, 900), Rand.getNum(0, 600), 32, 32 };
-        m_Number = Rand.getNum(0, 3);
-        m_Dst = m_HitBox;
-    }
-
-    void handleEvent() {
-        auto& mouse = Mouse::getInstance();
-        if (mouse.lIsUp()) {
-            if (isCollide(mouse.getX(), mouse.getY()))
-                m_SrcID = m_Number;
-        }
-    }
-
-    bool isCollide(int x, int y) const {
-        if (x >= m_HitBox.x && x <= m_HitBox.x + m_HitBox.w &&
-            y >= m_HitBox.y && y <= m_HitBox.y + m_HitBox.h)
-            return true;
-        return false;
-    }
-
-    constexpr uint8_t getSrcID() const { return m_SrcID; }
-    inline const SDL_Rect& getDst() const { return m_Dst; }
-
-private:
-    uint8_t m_SrcID;
-    SDL_Rect m_Dst;
-    SDL_Rect m_HitBox;
-    int m_Number;
-};
+#include "Minesweeper/Game.h"
 
 int main(int argc, char *argv[]) {
     
@@ -59,7 +27,7 @@ int main(int argc, char *argv[]) {
     {
         Window window("Main", 960, 640, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
         
-        Renderer renderer = window.createRenderer(SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+        Renderer renderer = window.createRenderer(SDL_RENDERER_ACCELERATED/* | SDL_RENDERER_PRESENTVSYNC*/);
         window.bindRenderer(renderer);
         renderer.printInfo();
         renderer.setAlphaBlending();
@@ -71,19 +39,7 @@ int main(int argc, char *argv[]) {
         ImGui_ImplSDLRenderer_Init(renderer.data());
         std::cout << "ImGui: version " << IMGUI_VERSION << '\n';
 
-        Texture texture = renderer.createTexture("res/textures/Tile.png");
-        
-        {
-            int size = 32;
-            std::vector<LabeledRect>& Srcs = texture.getSrc();
-            Srcs.clear();
-            Srcs.reserve(5);
-            for (int i = 0; i < 5; ++i) {
-                Srcs.emplace_back(0, i * size, 0, size, size);
-            }
-        }
-
-        std::array<Cell, 100> cells;
+        Minesweeper::Game game(renderer, 9, 9, 10);
 
         Mouse& mouse = Mouse::getInstance();
         SDL_Event Event;
@@ -101,13 +57,11 @@ int main(int argc, char *argv[]) {
                     break;
                 }
                 }
-                
                 // decide what to do with this event
             }
             mouse.update();
+            game.onUpdate();
             // update game state, draw the current frame
-            for (auto& cell : cells)
-                cell.handleEvent();
 
             ImGui_ImplSDLRenderer_NewFrame();
             ImGui_ImplSDL2_NewFrame();
@@ -117,13 +71,19 @@ int main(int argc, char *argv[]) {
                 ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
                 ImGui::End();
             }
+            {
+                ImGui::Begin("Debug");
+                if (ImGui::Button("Reveal Board"))
+                    game.reveal();
+                if (ImGui::Button("New Game"))
+                    game.newGame(9, 9, 10);
+                ImGui::End();
+            }
             ImGui::Render();
 
             renderer.clear();
-            for (const auto& cell : cells)
-                renderer.render(texture, texture.getSrc()[cell.getSrcID()].Rect, cell.getDst());
+            game.onRender(renderer);
             ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
-
             renderer.present();
         }
 
