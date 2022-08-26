@@ -1,12 +1,12 @@
-#ifndef MINESWEEPER_VEC2_H_
-#define MINESWEEPER_VEC2_H_
+#ifndef LAN_VEC2_H_
+#define LAN_VEC2_H_
 
-namespace Minesweeper {
+namespace lan {
 
 template <typename Ty>
 struct Vec2 {
     Ty x, y;
-    
+
     Vec2() : x(0), y(0) {}
     Vec2(Ty px, Ty py) : x(px), y(py) {}
 
@@ -72,7 +72,6 @@ Vec2<Ty> operator/(const Vec2<Ty> Left, Ty Right) {
     return Result;
 }
 
+} // namespace lan
 
-} // namespace Minesweeper
-
-#endif // !MINESWEEPER_VEC2_H_
+#endif // !LAN_VEC2_H_

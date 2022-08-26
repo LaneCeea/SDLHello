@@ -2,13 +2,14 @@
 #define MINESWEEPER_GAME_H_
 
 #include <memory>
+#include <Vec/Vec2.h>
 
 #include "Mouse.h"
 #include "Renderer.h"
 #include "Texture.h"
 
 #include "GameBoard.h"
-#include "Vec2.h"
+#include "TimerDisplay.h"
 
 namespace Minesweeper {
 
@@ -21,7 +22,8 @@ public:
     Game(Renderer& RenderingContext, int rows, int columns, int mines);
 
     void onUpdate();
-    void onRender(Renderer& RenderingContext);
+    void onImGuiRender();
+    void onRender();
 
     // Events
 
@@ -32,9 +34,13 @@ public:
 
 private:
     // rendering data
-    Texture m_TileSet;
-    Vec2<int> m_BoardPos;
+    Renderer* RendererPtr;
+
+    Texture m_CellTileSet;
+    lan::Vec2<int> m_BoardPos;
     int m_CellSize;
+
+    TimerDisplay m_TimerDisplay;
 
     // game data
     std::unique_ptr<GameBoard> m_BoardPtr;

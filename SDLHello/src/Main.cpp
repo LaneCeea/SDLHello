@@ -11,13 +11,15 @@
 
 #include <Rng/Rng.h>
 
-#include "SDLHandler.h"
-#include "Window.h"
-#include "Renderer.h"
-#include "Texture.h"
+#include "Camera.h"
 #include "Mouse.h"
+#include "Renderer.h"
+#include "SDLHandler.h"
+#include "Texture.h"
+#include "Window.h"
 
 #include "Minesweeper/Game.h"
+#include "Minesweeper/TimerDisplay.h"
 
 int main(int argc, char *argv[]) {
     
@@ -25,12 +27,16 @@ int main(int argc, char *argv[]) {
     SDL::printVersion();
 
     {
-        Window window("Main", 960, 640, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+        Window window("Main", 1280, 720, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
         
         Renderer renderer = window.createRenderer(SDL_RENDERER_ACCELERATED/* | SDL_RENDERER_PRESENTVSYNC*/);
         window.bindRenderer(renderer);
         renderer.printInfo();
         renderer.setAlphaBlending();
+
+        Camera camera;
+        renderer.setCamera(camera);
+        Mouse& mouse = Mouse::getInstance();
         
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
@@ -41,27 +47,30 @@ int main(int argc, char *argv[]) {
 
         Minesweeper::Game game(renderer, 9, 9, 10);
 
-        Mouse& mouse = Mouse::getInstance();
         SDL_Event Event;
         bool UserQuit = false;
         while (!UserQuit) {
             while (SDL_PollEvent(&Event)) {
+                // decide what to do with this event
                 ImGui_ImplSDL2_ProcessEvent(&Event);
                 switch (Event.type) {
-                case SDL_QUIT: {
+                case SDL_QUIT:
                     UserQuit = true;
                     break;
-                }
-                case SDL_WINDOWEVENT: {
+
+                case SDL_WINDOWEVENT:
                     window.handleEvent(Event.window);
                     break;
+
+                case SDL_MOUSEWHEEL:
+                    mouse.handleWheelEvent(Event.wheel);
+                    break;
                 }
-                }
-                // decide what to do with this event
             }
-            mouse.update();
-            game.onUpdate();
             // update game state, draw the current frame
+            mouse.onUpdate();
+            camera.onUpdate();
+            game.onUpdate();
 
             ImGui_ImplSDLRenderer_NewFrame();
             ImGui_ImplSDL2_NewFrame();
@@ -71,18 +80,11 @@ int main(int argc, char *argv[]) {
                 ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
                 ImGui::End();
             }
-            {
-                ImGui::Begin("Debug");
-                if (ImGui::Button("Reveal Board"))
-                    game.reveal();
-                if (ImGui::Button("New Game"))
-                    game.newGame(9, 9, 10);
-                ImGui::End();
-            }
+            game.onImGuiRender();
             ImGui::Render();
 
             renderer.clear();
-            game.onRender(renderer);
+            game.onRender();
             ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
             renderer.present();
         }

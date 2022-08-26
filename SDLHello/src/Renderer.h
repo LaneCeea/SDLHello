@@ -6,6 +6,7 @@
 #include <SDL_pixels.h>
 
 #include "Texture.h"
+#include "Camera.h"
 
 class Renderer {
 public:
@@ -22,8 +23,16 @@ public:
 
     Texture createTexture(const char* path);
     
+    inline void setCamera(Camera& BindingCamera) {
+        m_CameraPtr = &BindingCamera;
+    }
+
+    inline Camera* getCamera() {
+        return m_CameraPtr;
+    }
+
     void setAlphaBlending();
-    void setColor(SDL_Color Color);
+    void setColor(const SDL_Color& Color);
     void clear();
 
     void render(Texture& SourceTexture, const SDL_Rect& Src, const SDL_Rect& Dst);
@@ -34,6 +43,7 @@ public:
 
 private:
     SDL_Renderer* m_Data;
+    Camera* m_CameraPtr;
 };
 
 #endif // !RENDERER_H_

@@ -5,10 +5,10 @@
 
 namespace Minesweeper {
 
-const std::array<Vec2<int32_t>, 8> GameBoard::Translates = {
-    Vec2<int32_t>(-1,  1), Vec2<int32_t>(0,  1), Vec2<int32_t>(1,  1),
-    Vec2<int32_t>(-1,  0)                      , Vec2<int32_t>(1,  0),
-    Vec2<int32_t>(-1, -1), Vec2<int32_t>(0, -1), Vec2<int32_t>(1, -1)
+const std::array<lan::Vec2<int32_t>, 8> GameBoard::Translates = {
+    lan::Vec2<int32_t>(-1,  1), lan::Vec2<int32_t>(0,  1), lan::Vec2<int32_t>(1,  1),
+    lan::Vec2<int32_t>(-1,  0)                           , lan::Vec2<int32_t>(1,  0),
+    lan::Vec2<int32_t>(-1, -1), lan::Vec2<int32_t>(0, -1), lan::Vec2<int32_t>(1, -1)
 };
 
 GameBoard::GameBoard(int rows, int columns, int mines)
@@ -18,14 +18,14 @@ GameBoard::GameBoard(int rows, int columns, int mines)
     _GenerateMine();
 }
 
-void GameBoard::adjust(const Vec2<int32_t>& FirstClick) {
+void GameBoard::adjust(const lan::Vec2<int32_t>& FirstClick) {
     auto& CurrentCell = at(FirstClick);
     if (CurrentCell.hasMine) {
         DEBUGLOG("Adjusting the mine...");
         // fill the number
         CurrentCell.hasMine = false;
         CurrentCell.number = 0;
-        _ForEachNeighbor(FirstClick,
+        forEachNeighbor(FirstClick,
             [&CurrentCell](Cell& NeighborCell) {
                 --NeighborCell.number;
                 if (NeighborCell.hasMine)
@@ -36,9 +36,9 @@ void GameBoard::adjust(const Vec2<int32_t>& FirstClick) {
         // relocate the mine
         int32_t offset = 0;
         for (auto& ResultCell : m_Cells) {
-            if (!ResultCell.hasMine) {
+            if (!ResultCell.hasMine && &ResultCell != &CurrentCell) {
                 ResultCell.hasMine = true;
-                _ForEachNeighbor(offsetToCoord(offset),
+                forEachNeighbor(offsetToCoord(offset),
                     [](Cell& NeighborCell) {
                         ++NeighborCell.number;
                     }
@@ -58,7 +58,7 @@ void GameBoard::_GenerateMine() {
 
     for (const auto& offset : MinesOffset) {
         m_Cells[offset].hasMine = true;
-        _ForEachNeighbor(offsetToCoord(offset),
+        forEachNeighbor(offsetToCoord(offset),
             [](Cell& NeighborCell) {
                 ++NeighborCell.number;
             }
@@ -67,7 +67,7 @@ void GameBoard::_GenerateMine() {
     DEBUGLOG("Success!\n");
 }
 
-void GameBoard::_Cascade(const Vec2<int32_t>& Coord) {
+void GameBoard::_Cascade(const lan::Vec2<int32_t>& Coord) {
     if (!isInRange(Coord))
         return;
 
@@ -81,8 +81,8 @@ void GameBoard::_Cascade(const Vec2<int32_t>& Coord) {
     if (CurrentCell.number != 0)
         return;
 
-    _ForEachNeighbor(Coord, 
-        [this](const Vec2<int32_t>& NeighborCoord) {
+    forEachNeighbor(Coord, 
+        [this](const lan::Vec2<int32_t>& NeighborCoord) {
             if (at(NeighborCoord).state == CellState::CLOSED)
                 _Cascade(NeighborCoord);
         }
@@ -90,17 +90,17 @@ void GameBoard::_Cascade(const Vec2<int32_t>& Coord) {
 
 }
 
-void GameBoard::_ForEachNeighbor(const Vec2<int32_t> CenterCoord, std::function<void(Cell&)> Function) {
+void GameBoard::forEachNeighbor(const lan::Vec2<int32_t> CenterCoord, std::function<void(Cell&)> Function) {
     for (const auto& Translate : Translates) {
-        Vec2<int32_t> NeighborCoord = CenterCoord + Translate;
+        lan::Vec2<int32_t> NeighborCoord = CenterCoord + Translate;
         if (isInRange(NeighborCoord))
             Function(at(NeighborCoord));
     }
 }
 
-void GameBoard::_ForEachNeighbor(const Vec2<int32_t> CenterCoord, std::function<void(const Vec2<int32_t>&)> Function) {
+void GameBoard::forEachNeighbor(const lan::Vec2<int32_t> CenterCoord, std::function<void(const lan::Vec2<int32_t>&)> Function) {
     for (const auto& Translate : Translates) {
-        Vec2<int32_t> NeighborCoord = CenterCoord + Translate;
+        lan::Vec2<int32_t> NeighborCoord = CenterCoord + Translate;
         if (isInRange(NeighborCoord))
             Function(NeighborCoord);
     }

@@ -7,7 +7,7 @@
 #include "SDLErrorHandler.h"
 
 Renderer::Renderer(SDL_Renderer* data)
-    : m_Data(data) {
+    : m_Data(data), m_CameraPtr(nullptr) {
     setColor({ 0x00, 0x00, 0x00, 0xFF });
 }
 
@@ -42,7 +42,7 @@ void Renderer::setAlphaBlending() {
     SDLAssert(SDL_SetRenderDrawBlendMode(m_Data, SDL_BLENDMODE_BLEND) == 0);
 }
 
-void Renderer::setColor(SDL_Color Color) {
+void Renderer::setColor(const SDL_Color& Color) {
     SDLAssert(SDL_SetRenderDrawColor(m_Data, Color.r, Color.g, Color.b, Color.a) == 0);
 }
 
@@ -51,7 +51,8 @@ void Renderer::clear() {
 }
 
 void Renderer::render(Texture& SourceTexture, const SDL_Rect& Src, const SDL_Rect& Dst) {
-    SDL_RenderCopy(m_Data, SourceTexture.data(), &Src, &Dst);
+    const SDL_Rect FinalDst = m_CameraPtr->transform(Dst);
+    SDL_RenderCopy(m_Data, SourceTexture.data(), &Src, &FinalDst);
 }
 
 void Renderer::render(Texture& SourceTexture, const std::vector<LabeledRect>& Srcs, const std::vector<LabeledRect>& Dsts) {
