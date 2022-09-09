@@ -14,14 +14,14 @@ const std::array<lan::Vec2<int32_t>, 8> GameBoard::Translates = {
 GameBoard::GameBoard(int rows, int columns, int mines)
     : ROWS(rows), COLUMNS(columns), MINES(mines),
     m_Cells(static_cast<size_t>(ROWS) * COLUMNS, Cell()) {
-    DEBUGLOG("GameBoard's constructor called!\n");
+    DEBUGLOG("[Minesweeper] GameBoard's constructor called!\n");
     _GenerateMine();
 }
 
 void GameBoard::adjust(const lan::Vec2<int32_t>& FirstClick) {
     auto& CurrentCell = at(FirstClick);
     if (CurrentCell.hasMine) {
-        DEBUGLOG("Adjusting the mine...");
+        DEBUGLOG("[Minesweeper] Adjusting the mine...");
         // fill the number
         CurrentCell.hasMine = false;
         CurrentCell.number = 0;
@@ -52,7 +52,7 @@ void GameBoard::adjust(const lan::Vec2<int32_t>& FirstClick) {
 }
 
 void GameBoard::_GenerateMine() {
-    DEBUGLOG("Generating mines...");
+    DEBUGLOG("[Minesweeper] Generating mines...");
     std::vector<int32_t> MinesOffset;
     lan::randomSequence<int32_t>(MinesOffset, 0, (int32_t)size() - 1, MINES);
 

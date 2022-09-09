@@ -69,7 +69,7 @@ public:
         auto& CurrentCell = at(InteractedCoord);
         auto& State = CurrentCell.state;
         if (State == CellState::CLOSED) {
-            DEBUGLOG("[Game Interaction] open\n");
+            DEBUGLOG("[Minesweeper Game Interaction] open\n");
             if (CurrentCell.hasMine) {
                 CurrentCell.state = CellState::EXPLODED;
                 return Interaction::EXPLODED;
@@ -92,11 +92,11 @@ public:
     inline Interaction flag(const lan::Vec2<int32_t>& InteractedCoord) {
         auto& State = at(InteractedCoord).state;
         if (State == CellState::CLOSED) {
-            DEBUGLOG("[Game Interaction] flag\n");
+            DEBUGLOG("[Minesweeper Game Interaction] flag\n");
             State = CellState::FLAGED;  // flag
             return Interaction::SUCCESS;
         } else if (State == CellState::FLAGED) {
-            DEBUGLOG("[Game Interaction] unflag\n");
+            DEBUGLOG("[Minesweeper Game Interaction] unflag\n");
             State = CellState::CLOSED;  // unflag
             return Interaction::FAILED;
         }
@@ -114,7 +114,7 @@ public:
                 }
             );
             if (flag_count == CurrentCell.number) {
-                DEBUGLOG("[Game Interaction] chording\n");
+                DEBUGLOG("[Minesweeper Game Interaction] chording\n");
                 bool exploded = false;
                 forEachNeighbor(InteractedCoord,
                     [this, &exploded](const lan::Vec2<int32_t>& NeighborCoord) {

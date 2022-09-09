@@ -1,14 +1,14 @@
 #include "SDLErrorHandler.h"
 
-#include <iostream>
+#include <cstdio>
 #include <SDL_error.h>
 
-void SDLPrintError() {
-    std::cout << "[SDL Error] (" << SDL_GetError() << ")\n";
+void SDLPrintError(const char* func, const char* file, int line) {
+    std::printf("[SDL Error] (%s): %s %s:%d\n", SDL_GetError(), func, file, line);
     SDL_ClearError();
 }
 
-void IMGPrintError() {
-    std::cout << "[SDL_image Error] (" << SDL_GetError() << ")\n";
+void IMGPrintError(const char* func, const char* file, int line) {
+    std::printf("[SDL_image Error] (%s): %s %s:%d\n", SDL_GetError(), func, file, line);
     SDL_ClearError();
 }

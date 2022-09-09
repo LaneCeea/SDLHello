@@ -7,20 +7,16 @@
 class Camera {
 public:
     Camera();
+    Camera(int win_w, int win_h);
 
     SDL_Rect transform(const SDL_Rect& Model);
-    void transform(int& PosX, int& PosY);
+    void transformvScreenToGlobal(int& PosX, int& PosY);
 
     void onUpdate();
 
 private:
-    struct PreciseRect {
-        float x, y;
-        float w, h;
-    };
-    // (x, y) : [Origin] camera's up left corner coordinate
-    // (w, h) : [Scaler] camera's dimension / window's dimension
-    PreciseRect m_View;
+    SDL_FRect m_View, m_Proj;
+    float m_CurrentScale;
     float m_ScrollingSensitivity;
     float m_ScalingSensitivity;
     float m_ScalingMin, m_ScalingMax;

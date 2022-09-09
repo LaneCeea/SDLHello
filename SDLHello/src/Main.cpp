@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         renderer.printInfo();
         renderer.setAlphaBlending();
 
-        Camera camera;
+        Camera camera(window.getWidth(), window.getHeight());
         renderer.setCamera(camera);
         Mouse& mouse = Mouse::getInstance();
         
@@ -43,10 +43,10 @@ int main(int argc, char *argv[]) {
         ImGui::StyleColorsDark();
         ImGui_ImplSDL2_InitForSDLRenderer(window.data(), renderer.data());
         ImGui_ImplSDLRenderer_Init(renderer.data());
-        std::cout << "ImGui: version " << IMGUI_VERSION << '\n';
+        std::cout << "ImGui version: " << IMGUI_VERSION << '\n';
 
         Minesweeper::Game game(renderer, 9, 9, 10);
-
+        
         SDL_Event Event;
         bool UserQuit = false;
         while (!UserQuit) {

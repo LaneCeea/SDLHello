@@ -26,6 +26,9 @@ void Renderer::printInfo() {
 }
 
 Texture Renderer::createTexture(const char* path) {
+    DEBUGLOG("[SDL] Creating Texture...\n");
+    DEBUGLOG("[SDL] Loading Image from %s\n", path);
+
     SDL_Surface* LoadedSurface = IMG_Load(path);
     IMGAssert(LoadedSurface != nullptr);
 

@@ -13,11 +13,13 @@ const int Window::DEFAULT_HEIGHT = 640;
 Window::Window()
     : m_Data(nullptr), m_Surface(nullptr), m_Renderer(nullptr),
     m_Title(DEFAULT_TITLE), m_Width(DEFAULT_WIDTH), m_Height(DEFAULT_HEIGHT) {
+    DEBUGLOG("[SDL] Creating Window...\n");
     init(SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 }
 
 Window::Window(const char* title, int w, int h, uint32_t flags)
     : m_Data(nullptr), m_Surface(nullptr), m_Title(title), m_Width(w), m_Height(h) {
+    DEBUGLOG("[SDL] Creating Window...\n");
     init(flags);
 }
 
@@ -43,6 +45,8 @@ void Window::destroy() {
 }
 
 Renderer Window::createRenderer(uint32_t flags) {
+    DEBUGLOG("[SDL] Creating Renderer...\n");
+
     SDL_Renderer* RendererData = SDL_CreateRenderer(m_Data, -1, flags);
     SDLAssert(RendererData != nullptr);
     return Renderer(RendererData);
